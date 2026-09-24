@@ -19,22 +19,32 @@ networks:
   default:
     ipam:
       config:
-        - subnet: 172.28.0.0/16
+        - subnet: 172.31.0.0/24
+          ip_range: 172.31.0.128/25
 
 services:
   dns:
     image: ghcr.io/nialtoservices/local-dns:latest
+	cap_drop:
+	  - ALL
+	mem_limit: 16m
+	read_only: true
+	restart: unless-stopped
+	security_opt:
+	  - no-new-privileges:true
+	environment:
+	  - TZ
     networks:
       default:
-        ipv4_address: 172.28.0.2
+        ipv4_address: 172.31.0.2
 
   app:
     image: your-app:latest
     runtime: runsc
-    volumes:
-      - ./resolv.conf:/etc/resolv.conf:ro
     depends_on:
       - dns
+    volumes:
+      - ./resolv.conf:/etc/resolv.conf:ro
 ```
 
 ### resolv.conf
@@ -42,7 +52,7 @@ services:
 Create a `resolv.conf` file that points to the DNS container's static IP:
 
 ```
-nameserver 172.28.0.2
+nameserver 172.31.0.2
 ```
 
 Mount this file into any `runsc` container that needs DNS resolution.

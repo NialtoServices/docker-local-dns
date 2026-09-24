@@ -23,10 +23,11 @@ LABEL org.opencontainers.image.description="A lightweight DNS proxy for Docker C
 LABEL org.opencontainers.image.licenses="Apache-2.0"
 LABEL org.opencontainers.image.source="https://github.com/NialtoServices/docker-local-dns"
 
-RUN apk update --no-cache
-RUN apk add --no-cache bind-tools dnsmasq tini
+RUN apk add --no-cache dnsmasq tini
 
 COPY dnsmasq.conf /etc/dnsmasq.conf
+
+USER dnsmasq
 
 EXPOSE 53/udp
 EXPOSE 53/tcp
