@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-ARG ALPINE_VERSION=3.23
+ARG ALPINE_VERSION=3.24
 
 FROM alpine:${ALPINE_VERSION}
 
